@@ -5,9 +5,11 @@ import org.jsoup.nodes.Element
 
 object KSoup {
 
-    fun <V: Any> simple(init: SimpleExtractor<V>.() -> Unit) = SimpleExtractor<V>().apply(init)
+    fun <V: Any> simple(init: SimpleExtractor<V>.() -> Unit) =
+            SimpleExtractor<V>().apply(init)
 
-    fun <V: Any> extract(init: SimpleExtractor<V>.() -> Unit) = simple(init).extract()
+    fun <V: Any> extract(init: SimpleExtractor<V>.() -> Unit) =
+            simple(init).extract()
 
 }
 
@@ -25,15 +27,28 @@ class SimpleExtractor<V: Any>(var url: String = "") : Extractor<V> {
 
     private val elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
 
-    fun create(generator: () -> V) {
+    /**
+     * Pass me a generator function for your result type.
+     * I'll make you one of these, so you can stuff it with information from the page.
+     */
+    fun result(generator: () -> V) {
         this.instanceGenerator = generator
     }
 
-    fun create(instance: V) = create { instance }
+    /**
+     * Pass me an instance, I'll fill it in from the page.
+     */
+    fun result(instance: V) = result { instance }
 
+    /**
+     * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
+     */
     fun find(css: String, extract: (Element, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, extract))
 
+    /**
+     * If I find a match for your CSS selector, I'll call your extractor function, and pass it a String.
+     */
     fun findText(css: String, extract: (String, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, { e, v -> extract(e.text(), v) }))
 

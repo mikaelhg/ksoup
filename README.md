@@ -9,7 +9,7 @@ val gh = KSoup.extract<GitHubPage> {
 
     url = "https://github.com/mikaelhg"
 
-    create { GitHubPage() }
+    result { GitHubPage() }
 
     find(".p-nickname") { element, page ->
         page.username = element.text()
