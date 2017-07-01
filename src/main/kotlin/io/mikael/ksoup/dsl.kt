@@ -19,13 +19,38 @@ interface Extractor<out V> {
 
 }
 
-data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit)
+/**
+ * We'll base the simple, detail page and multipage extractors on this.
+ */
+abstract class ExtractorBase<V: Any> : Extractor<V> {
 
-class SimpleExtractor<V: Any>(var url: String = "") : Extractor<V> {
+    internal lateinit var instanceGenerator: () -> V
 
-    private lateinit var instanceGenerator: () -> V
+    internal lateinit var urlGenerator: () -> String
 
-    private val elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
+    internal var userAgentGenerator: () -> String = { "Mozilla/5.0 Ksoup/1.0" }
+
+    internal val elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
+
+    var url: String
+        get() = urlGenerator()
+        set(value) { this.urlGenerator = { value } }
+
+    var userAgent: String
+        get() = userAgentGenerator()
+        set(value) { this.userAgentGenerator = { value } }
+
+    override fun extract(): V {
+        val instance = instanceGenerator()
+        val doc = Jsoup.connect(urlGenerator()).userAgent(userAgentGenerator()).get()!!
+        elementExtractions.forEach {
+            val e = doc.select(it.css)?.first()
+            if (null != e) {
+                it.extract(e, instance)
+            }
+        }
+        return instance
+    }
 
     /**
      * Pass me a generator function for your result type.
@@ -40,6 +65,23 @@ class SimpleExtractor<V: Any>(var url: String = "") : Extractor<V> {
      */
     fun result(instance: V) = result { instance }
 
+    fun userAgent(userAgentGenerator: () -> String) {
+        this.userAgentGenerator = userAgentGenerator
+    }
+
+}
+
+internal data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit)
+
+/**
+ * Hit one page, get some data.
+ */
+class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
+
+    init {
+        this.urlGenerator = { url }
+    }
+
     /**
      * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
      */
@@ -51,17 +93,5 @@ class SimpleExtractor<V: Any>(var url: String = "") : Extractor<V> {
      */
     fun findText(css: String, extract: (String, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, { e, v -> extract(e.text(), v) }))
-
-    override fun extract(): V {
-        val instance = instanceGenerator()
-        val doc = Jsoup.connect(url)?.get()!!
-        elementExtractions.forEach {
-            val e = doc.select(it.css)?.first()
-            if (null != e) {
-                it.extract(e, instance)
-            }
-        }
-        return instance
-    }
 
 }

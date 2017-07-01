@@ -16,6 +16,8 @@ class LanguageTests {
 
             url = "https://github.com/mikaelhg"
 
+            userAgent = "Mozilla/5.0 UnitTesting/1.0"
+
             find(".p-nickname") { element, page ->
                 page.username = element.text()
             }
