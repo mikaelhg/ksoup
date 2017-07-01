@@ -9,16 +9,18 @@ data class GitHubPage(var username: String = "", var fullName: String = "")
 
 val gh = KSoup.extract<GitHubPage> {
 
-    url = "https://github.com/mikaelhg"
-
     result { GitHubPage() }
 
-    find(".p-nickname") { element, page ->
-        page.username = element.text()
+    url = "https://github.com/mikaelhg"
+
+    userAgent = "Mozilla/5.0 Ksoup/1.0"
+
+    text(".p-name") { text, page ->
+        page.fullName = text
     }
 
-    findText(".p-name") { text, page ->
-        page.fullName = text
+    element(".p-nickname") { el, page ->
+        page.username = el.text()
     }
 
 }

@@ -18,11 +18,11 @@ class LanguageTests {
 
             userAgent = "Mozilla/5.0 UnitTesting/1.0"
 
-            find(".p-nickname") { element, page ->
+            element(".p-nickname") { element, page ->
                 page.username = element.text()
             }
 
-            findText(".p-name") { text, page ->
+            text(".p-name") { text, page ->
                 page.fullName = text
             }
         }

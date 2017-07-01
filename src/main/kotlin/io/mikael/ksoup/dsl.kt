@@ -83,15 +83,15 @@ class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
     }
 
     /**
-     * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
+     * If I element a match for your CSS selector, I'll call your extractor function, and pass it an Element.
      */
-    fun find(css: String, extract: (Element, V) -> Unit) =
+    fun element(css: String, extract: (Element, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, extract))
 
     /**
-     * If I find a match for your CSS selector, I'll call your extractor function, and pass it a String.
+     * If I element a match for your CSS selector, I'll call your extractor function, and pass it a String.
      */
-    fun findText(css: String, extract: (String, V) -> Unit) =
+    fun text(css: String, extract: (String, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, { e, v -> extract(e.text(), v) }))
 
 }
