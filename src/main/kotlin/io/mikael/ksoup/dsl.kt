@@ -25,11 +25,11 @@ class SimpleExtractor<V: Any>(var url: String = "") : Extractor<V> {
 
     private val elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
 
-    fun input(generator: () -> V) {
+    fun create(generator: () -> V) {
         this.instanceGenerator = generator
     }
 
-    fun input(instance: V) = input { instance }
+    fun create(instance: V) = create { instance }
 
     fun find(css: String, extract: (Element, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, extract))
@@ -41,7 +41,10 @@ class SimpleExtractor<V: Any>(var url: String = "") : Extractor<V> {
         val instance = instanceGenerator()
         val doc = Jsoup.connect(url)?.get()!!
         elementExtractions.forEach {
-            it.extract(doc.select(it.css)?.first()!!, instance)
+            val e = doc.select(it.css)?.first()
+            if (null != e) {
+                it.extract(e, instance)
+            }
         }
         return instance
     }
