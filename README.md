@@ -2,6 +2,8 @@
 
 A Kotlin DSL for JSoup.
 
+The objective is to improve the long-term maintainability of JSoup content extraction units.
+
 ```kotlin
 data class GitHubPage(var username: String = "", var fullName: String = "")
 
