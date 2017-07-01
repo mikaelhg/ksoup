@@ -1,6 +1,6 @@
 ## Ksoup
 
-A Kotlin DSL for JSoup.
+A Kotlin DSL for [JSoup](https://jsoup.org/).
 
 The objective is to improve the long-term maintainability of JSoup content extraction units.
 
