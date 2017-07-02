@@ -12,8 +12,10 @@ val gh = KSoup.extract<GitHubPage> {
     result { GitHubPage() }
 
     url = "https://github.com/mikaelhg"
-
+    
     userAgent = "Mozilla/5.0 Ksoup/1.0"
+
+    headers["Accept-Encoding"] = "gzip"
 
     text(".p-name") { text, page ->
         page.fullName = text

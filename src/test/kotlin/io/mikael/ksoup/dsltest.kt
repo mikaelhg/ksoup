@@ -15,8 +15,8 @@ class LanguageTests {
             result { GitHubPage() }
 
             url = "https://github.com/mikaelhg"
-
             userAgent = "Mozilla/5.0 UnitTesting/1.0"
+            headers["Accept-Encoding"] = "gzip"
 
             element(".p-nickname") { element, page ->
                 page.username = element.text()

@@ -22,13 +22,11 @@ interface Extractor<out V> {
 /**
  * We'll base the simple, detail page and multipage extractors on this.
  */
-abstract class ExtractorBase<V: Any> : Extractor<V> {
+abstract class ExtractorBase<V: Any> : Extractor<V>, HttpClientBase() {
 
     internal lateinit var instanceGenerator: () -> V
 
     internal lateinit var urlGenerator: () -> String
-
-    internal var userAgentGenerator: () -> String = { "Mozilla/5.0 Ksoup/1.0" }
 
     internal val elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
 
@@ -36,13 +34,9 @@ abstract class ExtractorBase<V: Any> : Extractor<V> {
         get() = urlGenerator()
         set(value) { this.urlGenerator = { value } }
 
-    var userAgent: String
-        get() = userAgentGenerator()
-        set(value) { this.userAgentGenerator = { value } }
-
     override fun extract(): V {
         val instance = instanceGenerator()
-        val doc = Jsoup.connect(urlGenerator()).userAgent(userAgentGenerator()).get()!!
+        val doc = Jsoup.connect(urlGenerator()).headers(headers).userAgent(userAgentGenerator()).get()!!
         elementExtractions.forEach {
             val e = doc.select(it.css)?.first()
             if (null != e) {
@@ -64,10 +58,6 @@ abstract class ExtractorBase<V: Any> : Extractor<V> {
      * Pass me an instance, I'll fill it in from the page.
      */
     fun result(instance: V) = result { instance }
-
-    fun userAgent(userAgentGenerator: () -> String) {
-        this.userAgentGenerator = userAgentGenerator
-    }
 
 }
 
