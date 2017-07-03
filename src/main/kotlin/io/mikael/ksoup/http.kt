@@ -1,7 +1,6 @@
 package io.mikael.ksoup
 
-
-open class HttpClientBase {
+open class HttpClient {
 
     var headers: MutableMap<String, String> = mutableMapOf()
 
@@ -17,5 +16,3 @@ open class HttpClientBase {
     }
 
 }
-
-
