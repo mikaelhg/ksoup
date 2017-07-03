@@ -1,6 +1,7 @@
 package io.mikael.ksoup
 
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 object KSoup {
@@ -37,11 +38,7 @@ abstract class ExtractorBase<V: Any> : Extractor<V>, HttpClientBase() {
     override fun extract(): V {
         val instance = instanceGenerator()
         val doc = Jsoup.connect(urlGenerator()).headers(headers).userAgent(userAgentGenerator()).get()!!
-        elementExtractions.forEach { x ->
-            doc.select(x.css).forEach { e ->
-                x.extract(e, instance)
-            }
-        }
+        elementExtractions.forEach { it.extract(doc, instance) }
         return instance
     }
 
@@ -60,7 +57,11 @@ abstract class ExtractorBase<V: Any> : Extractor<V>, HttpClientBase() {
 
 }
 
-internal data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit)
+internal data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit) {
+
+    fun extract(doc: Document, item: V) = doc.select(css).forEach { element -> extract(element, item) }
+
+}
 
 /**
  * Hit one page, get some data.
