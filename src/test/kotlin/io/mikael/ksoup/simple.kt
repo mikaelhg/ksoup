@@ -2,10 +2,9 @@ package io.mikael.ksoup
 
 import org.junit.Test
 
-data class GitHubPage(var username: String = "", var fullName: String = "")
+class SimpleTests {
 
-class LanguageTests {
-
+    data class GitHubPage(var username: String = "", var fullName: String = "")
 
     @Test
     fun `simple one page extraction`() {
@@ -15,7 +14,9 @@ class LanguageTests {
             result { GitHubPage() }
 
             url = "https://github.com/mikaelhg"
+
             userAgent = "Mozilla/5.0 UnitTesting/1.0"
+
             headers["Accept-Encoding"] = "gzip"
 
             element(".p-nickname") { element, page ->
@@ -29,11 +30,6 @@ class LanguageTests {
 
         assert(gh.username == "mikaelhg")
         assert(gh.fullName == "Mikael Gueck")
-    }
-
-    @Test
-    fun `simple multipage extraction`() {
-
     }
 
 }

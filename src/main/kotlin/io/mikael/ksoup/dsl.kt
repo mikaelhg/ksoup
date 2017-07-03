@@ -37,10 +37,9 @@ abstract class ExtractorBase<V: Any> : Extractor<V>, HttpClientBase() {
     override fun extract(): V {
         val instance = instanceGenerator()
         val doc = Jsoup.connect(urlGenerator()).headers(headers).userAgent(userAgentGenerator()).get()!!
-        elementExtractions.forEach {
-            val e = doc.select(it.css)?.first()
-            if (null != e) {
-                it.extract(e, instance)
+        elementExtractions.forEach { x ->
+            doc.select(x.css).forEach { e ->
+                x.extract(e, instance)
             }
         }
         return instance
