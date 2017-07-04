@@ -47,16 +47,8 @@ class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
              url: String? = null,
              instance: V? = null) =
             SimpleExtractor<V>().apply {
-                if (url == null) {
-                    this.urlGenerator = urlGenerator
-                } else {
-                    this.urlGenerator = { url }
-                }
-                if (instance == null) {
-                    this.instanceGenerator = instanceGenerator
-                } else {
-                    this.instanceGenerator = { instance }
-                }
+                this.urlGenerator = if (url == null) urlGenerator else ({ url })
+                this.instanceGenerator = if (instance == null) instanceGenerator else ({ instance })
                 this.elementExtractions = elementExtractions
             }
 
