@@ -1,5 +1,10 @@
 package io.mikael.ksoup
 
+import org.jsoup.Jsoup
+
+/**
+ * This is absolutely going undergo a total change soon.
+ */
 open class HttpClient {
 
     var headers: MutableMap<String, String> = mutableMapOf()
@@ -14,5 +19,8 @@ open class HttpClient {
     fun userAgent(userAgentGenerator: () -> String) {
         this.userAgentGenerator = userAgentGenerator
     }
+
+    protected fun get(url: String) =
+            Jsoup.connect(url).headers(headers).userAgent(userAgentGenerator()).get()!!
 
 }

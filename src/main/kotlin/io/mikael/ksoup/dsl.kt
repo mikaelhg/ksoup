@@ -1,7 +1,5 @@
 package io.mikael.ksoup
 
-import org.jsoup.Jsoup
-
 /**
  * Invoke the methods on this main DSL class to fetch data using JSoup.
  */
@@ -36,8 +34,7 @@ abstract class ExtractorBase<V : Any> : Extractor<V>, HttpClient() {
         get() = urlGenerator()
         set(value) { this.urlGenerator = { value } }
 
-    protected fun document() =
-            Jsoup.connect(urlGenerator()).headers(headers).userAgent(userAgentGenerator()).get()!!
+    protected fun document() = get(urlGenerator())
 
     /**
      * Pass me a generator function for your result type.

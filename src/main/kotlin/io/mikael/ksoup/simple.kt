@@ -4,7 +4,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 
-internal data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit) {
+data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit) {
 
     fun extract(doc: Document, item: V) = doc.select(css).forEach { element -> extract(element, item) }
 
@@ -19,7 +19,7 @@ class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
         this.urlGenerator = { url }
     }
 
-    internal val elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
+    internal var elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
 
     override fun extract(): V {
         val instance = instanceGenerator()
@@ -39,5 +39,25 @@ class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
      */
     fun text(css: String, extract: (String, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, { e, v -> extract(e.text(), v) }))
+
+
+    fun copy(urlGenerator: () -> String = this.urlGenerator,
+             instanceGenerator: () -> V = this.instanceGenerator,
+             elementExtractions: MutableList<ElementExtraction<V>> = this.elementExtractions,
+             url: String? = null,
+             instance: V? = null) =
+            SimpleExtractor<V>().apply {
+                if (url == null) {
+                    this.urlGenerator = urlGenerator
+                } else {
+                    this.urlGenerator = { url }
+                }
+                if (instance == null) {
+                    this.instanceGenerator = instanceGenerator
+                } else {
+                    this.instanceGenerator = { instance }
+                }
+                this.elementExtractions = elementExtractions
+            }
 
 }
