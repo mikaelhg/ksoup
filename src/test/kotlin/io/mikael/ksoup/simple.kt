@@ -1,5 +1,6 @@
 package io.mikael.ksoup
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class SimpleTests : StaticWebTest() {
@@ -20,7 +21,7 @@ class SimpleTests : StaticWebTest() {
     fun `simple one page extraction`() {
         val gh = KSoup.extract<GitHubPage> {
             result { GitHubPage() }
-            url = server.url("/mikaelhg").toString()
+            url = testUrl("/mikaelhg")
             userAgent = "Mozilla/5.0 UnitTesting/1.0"
             headers["Accept-Encoding"] = "gzip"
             element(".p-nickname") { element, page ->
@@ -30,9 +31,9 @@ class SimpleTests : StaticWebTest() {
                 page.fullName = text
             }
         }
-        assert(gh.username == "mikaelhg")
-        assert(gh.fullName == "Mikael Gueck")
-        assert(server.takeRequest().path == "/mikaelhg")
+        assertEquals("mikaelhg", gh.username)
+        assertEquals("Mikael Gueck", gh.fullName)
+        assertRequestPath("/mikaelhg")
     }
 
     @Test
@@ -47,11 +48,11 @@ class SimpleTests : StaticWebTest() {
                 page.fullName = text
             }
         }
-        val ex2 = ex1.copy(url = server.url("/huima").toString())
+        val ex2 = ex1.copy(url = testUrl("/huima"))
         val gh = ex2.extract()
-        assert(gh.username == "huima")
-        assert(gh.fullName == "Heimo Laukkanen")
-        assert(server.takeRequest().path == "/huima")
+        assertEquals("huima", gh.username)
+        assertEquals("Heimo Laukkanen", gh.fullName)
+        assertRequestPath("/huima")
     }
 
 }
