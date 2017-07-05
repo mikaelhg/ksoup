@@ -1,5 +1,6 @@
-package io.mikael.ksoup
+package io.mikael.ksoup.test
 
+import io.mikael.ksoup.KSoup
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -8,7 +9,7 @@ class SimpleTests : StaticWebTest() {
     data class GitHubPage(var username: String = "", var fullName: String = "")
 
     init {
-        contentResolver = {
+        staticContentResolver = {
             when (it) {
                 "/mikaelhg" -> "github-mikaelhg.html"
                 "/huima" -> "github-huima.html"

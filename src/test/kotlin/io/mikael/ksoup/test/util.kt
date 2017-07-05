@@ -1,4 +1,4 @@
-package io.mikael.ksoup
+package io.mikael.ksoup.test
 
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -10,7 +10,7 @@ import org.junit.Before
 
 internal class StaticDispatcher(private val resolver: (String) -> String?): Dispatcher() {
 
-    private fun readText(filename: String) = javaClass.classLoader.getResource(filename).readText()
+    private fun readText(filename: String) = javaClass.classLoader.getResource(filename)!!.readText()
 
     override fun dispatch(request: RecordedRequest?): MockResponse {
         val resourcePath = resolver(request!!.path)
@@ -26,12 +26,12 @@ open class StaticWebTest {
 
     protected lateinit var server: MockWebServer
 
-    protected lateinit var contentResolver: (String) -> String?
+    protected lateinit var staticContentResolver: (String) -> String?
 
     @Before
     fun before() {
         server = MockWebServer().apply {
-            this.setDispatcher(StaticDispatcher(contentResolver))
+            this.setDispatcher(StaticDispatcher(staticContentResolver))
             this.start()
         }
     }
