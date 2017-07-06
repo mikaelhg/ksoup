@@ -1,6 +1,7 @@
 package io.mikael.ksoup.test
 
 import io.mikael.ksoup.KSoup
+import org.jsoup.nodes.Element
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -21,8 +22,10 @@ class SimpleTests : StaticWebTest() {
         val gh = KSoup.extract<GitHubPage> {
             result { GitHubPage() }
             url = testUrl("/mikaelhg")
+            element(".p-nickname", Element::text, GitHubPage::username)
             text(".p-name", GitHubPage::fullName)
         }
+        assertEquals("mikaelhg", gh.username)
         assertEquals("Mikael Gueck", gh.fullName)
         assertRequestPath("/mikaelhg")
     }

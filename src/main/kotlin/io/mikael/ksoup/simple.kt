@@ -4,7 +4,6 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import kotlin.reflect.KMutableProperty1
 
-
 data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit) {
 
     fun extract(doc: Document, item: V) = doc.select(css).forEach { element -> extract(element, item) }
@@ -14,13 +13,13 @@ data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, 
 /**
  * Hit one page, get some data.
  */
-class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
+open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
 
     init {
         this.urlGenerator = { url }
     }
 
-    internal var elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
+    protected var elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
 
     override fun extract(): V {
         val instance = instanceGenerator()
@@ -34,6 +33,12 @@ class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
      */
     fun element(css: String, extract: (Element, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, extract))
+
+    /**
+     * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
+     */
+    fun <P> element(css: String, from: Element.() -> P, toProperty: KMutableProperty1<V, P>) =
+            elementExtractions.add(ElementExtraction(css, { e, v -> toProperty.set(v, e.from()) }))
 
     /**
      * If I find a match for your CSS selector, I'll call your extractor function, and pass it a String.
