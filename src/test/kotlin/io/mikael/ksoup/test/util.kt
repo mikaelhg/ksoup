@@ -12,13 +12,15 @@ data class GitHubPage(var username: String = "", var fullName: String = "")
 
 internal class StaticDispatcher(private val resolver: (String) -> String?): Dispatcher() {
 
-    private fun readText(filename: String) = javaClass.classLoader.getResource(filename)!!.readText()
-
     override fun dispatch(request: RecordedRequest?): MockResponse {
         val resourcePath = resolver(request!!.path)
-        return when (resourcePath) {
+        val resource = when (resourcePath) {
+            null -> null
+            else -> javaClass.classLoader.getResource(resourcePath)
+        }
+        return when (resource) {
             null -> MockResponse().setResponseCode(404)
-            else -> MockResponse().setResponseCode(200).setBody(readText(resourcePath))
+            else -> MockResponse().setResponseCode(200).setBody(resource.readText())
         }
     }
 
