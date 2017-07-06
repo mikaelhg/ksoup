@@ -6,8 +6,6 @@ import org.junit.Test
 
 class SimpleTests : StaticWebTest() {
 
-    data class GitHubPage(var username: String = "", var fullName: String = "")
-
     init {
         staticContentResolver = {
             when (it) {
@@ -16,6 +14,17 @@ class SimpleTests : StaticWebTest() {
                 else -> null
             }
         }
+    }
+
+    @Test
+    fun `property reference`() {
+        val gh = KSoup.extract<GitHubPage> {
+            result { GitHubPage() }
+            url = testUrl("/mikaelhg")
+            text(".p-name", GitHubPage::fullName)
+        }
+        assertEquals("Mikael Gueck", gh.fullName)
+        assertRequestPath("/mikaelhg")
     }
 
     @Test

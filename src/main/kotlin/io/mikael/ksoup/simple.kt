@@ -2,6 +2,7 @@ package io.mikael.ksoup
 
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import kotlin.reflect.KMutableProperty1
 
 
 data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit) {
@@ -29,18 +30,26 @@ class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
     }
 
     /**
-     * If I element a match for your CSS selector, I'll call your extractor function, and pass it an Element.
+     * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
      */
     fun element(css: String, extract: (Element, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, extract))
 
     /**
-     * If I element a match for your CSS selector, I'll call your extractor function, and pass it a String.
+     * If I find a match for your CSS selector, I'll call your extractor function, and pass it a String.
      */
     fun text(css: String, extract: (String, V) -> Unit) =
             elementExtractions.add(ElementExtraction(css, { e, v -> extract(e.text(), v) }))
 
+    /**
+     * If I find a match for your CSS selector, I'll stuff the results into your instance property.
+     */
+    fun text(css: String, property: KMutableProperty1<V, String>) =
+            elementExtractions.add(ElementExtraction(css, { e, v -> property.set(v, e.text()) }))
 
+    /**
+     * Call for a copy. Pass in the values you want to change in the new instance.
+     */
     fun copy(urlGenerator: () -> String = this.urlGenerator,
              instanceGenerator: () -> V = this.instanceGenerator,
              elementExtractions: MutableList<ElementExtraction<V>> = this.elementExtractions,

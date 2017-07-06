@@ -8,6 +8,8 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 
+data class GitHubPage(var username: String = "", var fullName: String = "")
+
 internal class StaticDispatcher(private val resolver: (String) -> String?): Dispatcher() {
 
     private fun readText(filename: String) = javaClass.classLoader.getResource(filename)!!.readText()
