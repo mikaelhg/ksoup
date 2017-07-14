@@ -17,17 +17,13 @@ internal val resourceAsStream = StaticWebTest::class.java.classLoader::getResour
 
 internal class StaticDispatcher(private val resolver: (String) -> String?): Dispatcher() {
 
-    override fun dispatch(request: RecordedRequest?): MockResponse {
-        val resourcePath = resolver(request!!.path)
-        val resource = when (resourcePath) {
-            null -> null
-            else -> resource(resourcePath)
-        }
-        return when (resource) {
-            null -> MockResponse().setResponseCode(404)
-            else -> MockResponse().setResponseCode(200).setBody(resource.readText())
-        }
-    }
+    private fun r(n: Int): MockResponse = MockResponse().setResponseCode(n)
+
+    override fun dispatch(request: RecordedRequest?) =
+            resolver(request!!.path)
+                    ?.let { resource(it) }
+                    ?.let { r(200).setBody(it.readText()) }
+                    ?: r(404)
 
 }
 
