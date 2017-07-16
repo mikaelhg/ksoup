@@ -11,9 +11,9 @@ import java.util.logging.LogManager
 
 data class GitHubPage(var username: String = "", var fullName: String = "")
 
-internal val resource = StaticWebTest::class.java.classLoader::getResource
+internal val resource = object {}::class.java.classLoader::getResource
 
-internal val resourceAsStream = StaticWebTest::class.java.classLoader::getResourceAsStream
+internal val resourceAsStream = object {}::class.java.classLoader::getResourceAsStream
 
 internal class StaticDispatcher(private val resolver: (String) -> String?): Dispatcher() {
 

@@ -14,7 +14,8 @@ dependencies:
 - {groupId: org.jsoup, artifactId: jsoup, version: "${jsoup.version}"}
 - {groupId: org.jetbrains.kotlin, artifactId: kotlin-stdlib-jre8, version: "${kotlin.version}"}
 - {scope: test, groupId: junit, artifactId: junit, version: 4.12}
-- {scope: test, groupId: com.squareup.okhttp3, artifactId: mockwebserver, version: 3.8.1, exclusions: [{groupId: org.bouncycastle, artifactId: '*'}]}
+- {scope: test, groupId: com.squareup.okhttp3, artifactId: mockwebserver, version: 3.8.1,
+    exclusions: [{groupId: org.bouncycastle, artifactId: '*'}]}
 
 build:
   sourceDirectory: src/main/kotlin

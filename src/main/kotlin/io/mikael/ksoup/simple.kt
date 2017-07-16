@@ -31,26 +31,30 @@ open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
     /**
      * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
      */
-    fun element(css: String, extract: (Element, V) -> Unit) =
-            elementExtractions.add(ElementExtraction(css, extract))
+    fun element(css: String, extract: (Element, V) -> Unit) {
+        elementExtractions.add(ElementExtraction(css, extract))
+    }
 
     /**
      * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
      */
-    fun <P> element(css: String, from: Element.() -> P, toProperty: KMutableProperty1<V, P>) =
-            elementExtractions.add(ElementExtraction(css, { e, v -> toProperty.set(v, e.from()) }))
+    fun <P> element(css: String, from: Element.() -> P, toProperty: KMutableProperty1<V, P>) {
+        elementExtractions.add(ElementExtraction(css, { e, v -> toProperty.set(v, e.from()) }))
+    }
 
     /**
      * If I find a match for your CSS selector, I'll call your extractor function, and pass it a String.
      */
-    fun text(css: String, extract: (String, V) -> Unit) =
-            elementExtractions.add(ElementExtraction(css, { e, v -> extract(e.text(), v) }))
+    fun text(css: String, extract: (String, V) -> Unit) {
+        elementExtractions.add(ElementExtraction(css, { e, v -> extract(e.text(), v) }))
+    }
 
     /**
      * If I find a match for your CSS selector, I'll stuff the results into your instance property.
      */
-    fun text(css: String, property: KMutableProperty1<V, String>) =
-            elementExtractions.add(ElementExtraction(css, { e, v -> property.set(v, e.text()) }))
+    fun text(css: String, property: KMutableProperty1<V, String>) {
+        elementExtractions.add(ElementExtraction(css, { e, v -> property.set(v, e.text()) }))
+    }
 
     /**
      * Call for a copy. Pass in the values you want to change in the new instance.

@@ -5,12 +5,11 @@ package io.mikael.ksoup
  */
 object KSoup {
 
-    fun <V : Any> simple(init: SimpleExtractor<V>.() -> Unit) =
-            SimpleExtractor<V>().apply(init)
+    fun <V : Any> simple(init: SimpleExtractor<V>.() -> Unit): SimpleExtractor<V>
+            = SimpleExtractor<V>().apply(init)
 
-    fun <V : Any> extract(init: SimpleExtractor<V>.() -> Unit) =
-            simple(init).extract()
-
+    fun <V : Any> extract(init: SimpleExtractor<V>.() -> Unit): V
+            = simple(init).extract()
 }
 
 /**
@@ -21,9 +20,13 @@ interface Extractor<out V> {
     fun extract(): V
 }
 
+@DslMarker
+internal annotation class KSoupDsl
+
 /**
  * We'll base the simple, detail page and multipage extractors on this.
  */
+@KSoupDsl
 abstract class ExtractorBase<V : Any> : Extractor<V>, HttpClient() {
 
     internal lateinit var instanceGenerator: () -> V
