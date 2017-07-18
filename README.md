@@ -26,4 +26,15 @@ val gh : GitHubPage = KSoup.extract<GitHubPage> {
     }
 
 }
+
+class ApacheHttpClient : HttpClient { ... implement a method ... }
+
+val gh = KSoup.extract<GitHubPage> {
+
+    httpClient = ApacheHttpClient()
+
+    ...
+}
+
+
 ```
