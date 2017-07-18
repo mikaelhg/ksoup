@@ -5,7 +5,7 @@ import org.jsoup.nodes.Element
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class SimpleTests : StaticWebTest() {
+class SimpleTests : WebTest() {
 
     init {
         staticContentResolver = {

@@ -1,5 +1,6 @@
 package io.mikael.ksoup.test
 
+import io.mikael.ksoup.getLogger
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -27,11 +28,13 @@ internal class StaticDispatcher(private val resolver: (String) -> String?): Disp
 
 }
 
-open class StaticWebTest {
+open class WebTest {
 
     protected lateinit var server: MockWebServer
 
     protected lateinit var staticContentResolver: (String) -> String?
+
+    protected val log = getLogger(this.javaClass)
 
     init {
         resourceAsStream("logging.properties").use {
