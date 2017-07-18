@@ -10,12 +10,13 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import java.util.logging.LogManager
 
-data class GitHubPage(var username: String = "", var fullName: String = "")
-
 internal val resource = object {}::class.java.classLoader::getResource
 
 internal val resourceAsStream = object {}::class.java.classLoader::getResourceAsStream
 
+/**
+ * Handle MockHttpServer's requests by looking up and serving a static file from classpath.
+ */
 internal class StaticDispatcher(private val resolver: (String) -> String?): Dispatcher() {
 
     private fun r(n: Int): MockResponse = MockResponse().setResponseCode(n)
@@ -28,6 +29,9 @@ internal class StaticDispatcher(private val resolver: (String) -> String?): Disp
 
 }
 
+/**
+ * A base for all integration tests which need to connect to a mock HTTP server.
+ */
 open class WebTest {
 
     protected lateinit var server: MockWebServer

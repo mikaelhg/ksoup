@@ -27,7 +27,7 @@ internal annotation class KSoupDsl
  * We'll base the simple, detail page and multipage extractors on this.
  */
 @KSoupDsl
-abstract class ExtractorBase<V : Any> : Extractor<V>, HttpClient() {
+abstract class ExtractorBase<V : Any> : Extractor<V>, HttpSupport() {
 
     internal lateinit var instanceGenerator: () -> V
 

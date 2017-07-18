@@ -7,7 +7,7 @@ The objective is to improve the long-term maintainability of JSoup content extra
 ```kotlin
 data class GitHubPage(var username: String = "", var fullName: String = "")
 
-val gh = KSoup.extract<GitHubPage> {
+val gh : GitHubPage = KSoup.extract<GitHubPage> {
 
     result { GitHubPage() }
 
