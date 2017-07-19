@@ -37,7 +37,7 @@ abstract class ExtractorBase<V : Any> : Extractor<V>, HttpSupport() {
         get() = urlGenerator()
         set(value) { this.urlGenerator = { value } }
 
-    protected fun document() = get(urlGenerator())
+    protected fun document() = get(url)
 
     /**
      * Pass me a generator function for your result type.

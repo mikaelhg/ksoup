@@ -4,7 +4,11 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import kotlin.reflect.KMutableProperty1
 
-data class ElementExtraction<in V: Any>(val css: String, val extract: (Element, V) -> Unit) {
+/**
+ * A container for each command to extract information from an Element,
+ * and stuff it into an object instance field.
+ */
+data class ExtractionCommand<in V: Any>(val css: String, val extract: (Element, V) -> Unit) {
 
     fun extract(doc: Document, item: V) = doc.select(css).forEach { element -> extract(element, item) }
 
@@ -19,41 +23,65 @@ open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
         this.urlGenerator = { url }
     }
 
-    protected var elementExtractions: MutableList<ElementExtraction<V>> = mutableListOf()
+    protected var extractionCommands: MutableList<ExtractionCommand<V>> = mutableListOf()
 
     override fun extract(): V {
         val instance = instanceGenerator()
         val doc = document()
-        elementExtractions.forEach { it.extract(doc, instance) }
+        extractionCommands.forEach { it.extract(doc, instance) }
         return instance
     }
 
     /**
      * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
+     *
+     * ## Usage:
+     * ```kotlin
+     * element(".p-nickname") { element, page ->
+     *     page.username = element.text()
+     * }
+     * ```
      */
     fun element(css: String, extract: (Element, V) -> Unit) {
-        elementExtractions.add(ElementExtraction(css, extract))
+        extractionCommands.add(ExtractionCommand(css, extract))
     }
 
     /**
      * If I find a match for your CSS selector, I'll call your extractor function, and pass it an Element.
+     *
+     * ## Usage:
+     * ```kotlin
+     * element(".p-nickname", Element::text, GitHubPage::username)
+     * ```
      */
-    fun <P> element(css: String, from: Element.() -> P, toProperty: KMutableProperty1<V, P>) {
-        elementExtractions.add(ElementExtraction(css, { e, v -> toProperty.set(v, e.from()) }))
+    fun <P> element(css: String, from: Element.() -> P, toProperty: KMutableProperty1<in V, P>) {
+        extractionCommands.add(ExtractionCommand(css, { e, v -> toProperty.set(v, e.from()) }))
     }
 
     /**
      * If I find a match for your CSS selector, I'll call your extractor function, and pass it a String.
+     *
+     * ## Usage:
+     * ```kotlin
+     * text(".p-name") { text, page ->
+     *     page.fullName = text
+     * }
+     * ```
      */
     fun text(css: String, extract: (String, V) -> Unit) {
-        elementExtractions.add(ElementExtraction(css, { e, v -> extract(e.text(), v) }))
+        extractionCommands.add(ExtractionCommand(css, { e, v -> extract(e.text(), v) }))
     }
 
     /**
      * If I find a match for your CSS selector, I'll stuff the results into your instance property.
+     *
+     * ## Usage:
+     * ```kotlin
+     * text(".p-name", GitHubPage::fullName)
+     * ```
      */
     fun text(css: String, property: KMutableProperty1<V, String>) {
-        elementExtractions.add(ElementExtraction(css, { e, v -> property.set(v, e.text()) }))
+        extractionCommands.add(ExtractionCommand(css, { e, v -> property.set(v, e.text()) }))
     }
 
     /**
@@ -61,13 +89,13 @@ open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
      */
     fun copy(urlGenerator: () -> String = this.urlGenerator,
              instanceGenerator: () -> V = this.instanceGenerator,
-             elementExtractions: MutableList<ElementExtraction<V>> = this.elementExtractions,
+             extractionCommands: MutableList<ExtractionCommand<V>> = this.extractionCommands,
              url: String? = null,
              instance: V? = null) =
             SimpleExtractor<V>().apply {
                 this.urlGenerator = if (url == null) urlGenerator else ({ url })
                 this.instanceGenerator = if (instance == null) instanceGenerator else ({ instance })
-                this.elementExtractions = elementExtractions
+                this.extractionCommands = extractionCommands
             }
 
 }
