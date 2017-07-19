@@ -4,6 +4,9 @@ A Kotlin DSL for [JSoup](https://jsoup.org/).
 
 The objective is to improve the long-term maintainability of JSoup content extraction units.
 
+Current status on 2017-07-21: totally useable for simple extractions, 
+but multi-page extractions and "next page" iteration aren't implemented yet.
+
 ```kotlin
 data class GitHubPage(var username: String = "", var fullName: String = "")
 
