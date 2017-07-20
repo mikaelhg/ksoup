@@ -5,11 +5,39 @@ package io.mikael.ksoup
  */
 object KSoup {
 
+    /**
+     * Get a web page and extract some content from it.
+     *
+     * ## Usage:
+     * ```kotlin
+     * val gh : GitHubPage = KSoup.extract<GitHubPage> {
+     *
+     *     url = "https://github.com/mikaelhg"
+     *
+     *     result { GitHubPage() }               // instantiate (or reuse) your result object
+     *
+     *     userAgent = "Mozilla/5.0 Ksoup/1.0"
+     *     headers["Accept-Encoding"] = "gzip"
+     *
+     *     text(".p-name") { text, page ->       // find all elements for the selector
+     *         page.fullName = text              //     then run this code for each
+     *     }
+     *
+     *     element(".p-nickname") { el, page ->  // find all elements for the selector
+     *         page.username = el.text()         //     then run this code for each
+     *     }
+     * }
+     * ```
+     */
+    fun <V : Any> extract(init: SimpleExtractor<V>.() -> Unit): V
+            = simple(init).extract()
+
+    /**
+     *
+     */
     fun <V : Any> simple(init: SimpleExtractor<V>.() -> Unit): SimpleExtractor<V>
             = SimpleExtractor<V>().apply(init)
 
-    fun <V : Any> extract(init: SimpleExtractor<V>.() -> Unit): V
-            = simple(init).extract()
 }
 
 /**
