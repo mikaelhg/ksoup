@@ -14,6 +14,34 @@ data class ExtractionCommand<in V: Any>(val css: String, val extract: (Element, 
 
 }
 
+@KSoupDsl
+abstract class ExtractorBase<V : Any> : Extractor<V>, HttpSupport() {
+
+    internal lateinit var instanceGenerator: () -> V
+
+    internal lateinit var urlGenerator: () -> String
+
+    var url: String
+        get() = urlGenerator()
+        set(value) { this.urlGenerator = { value } }
+
+    protected fun document() = get(url)
+
+    /**
+     * Pass me a generator function for your result type.
+     * I'll make you one of these, so you can stuff it with information from the page.
+     */
+    fun result(generator: () -> V) {
+        this.instanceGenerator = generator
+    }
+
+    /**
+     * Pass me an instance, and I'll fill it in from the page.
+     */
+    fun result(instance: V) = result { instance }
+
+}
+
 /**
  * Hit one page, get some data.
  */

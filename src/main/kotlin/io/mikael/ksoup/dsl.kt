@@ -1,5 +1,8 @@
 package io.mikael.ksoup
 
+@DslMarker
+annotation class KSoupDsl
+
 /**
  * Invoke the methods on this main DSL class to fetch data using JSoup.
  */
@@ -9,6 +12,9 @@ object KSoup {
      * Get a web page and extract some content from it.
      *
      * ## Usage:
+     *
+     * If you want to extract content from GitHub into an instance of the data class GitHubPage:
+     *
      * ```kotlin
      * val gh : GitHubPage = KSoup.extract<GitHubPage> {
      *
@@ -17,15 +23,20 @@ object KSoup {
      *     result { GitHubPage() }               // instantiate (or reuse) your result object
      *
      *     userAgent = "Mozilla/5.0 Ksoup/1.0"
+     *
      *     headers["Accept-Encoding"] = "gzip"
      *
      *     text(".p-name") { text, page ->       // find all elements for the selector
      *         page.fullName = text              //     then run this code for each
      *     }
      *
+     *     text(".p-name", GitHubPage::fullName)
+     *
      *     element(".p-nickname") { el, page ->  // find all elements for the selector
      *         page.username = el.text()         //     then run this code for each
      *     }
+     *
+     *     element(".p-nickname", Element::text, GitHubPage::username)
      * }
      * ```
      */
@@ -46,38 +57,4 @@ object KSoup {
  */
 interface Extractor<out V> {
     fun extract(): V
-}
-
-@DslMarker
-internal annotation class KSoupDsl
-
-/**
- * We'll base the simple, detail page and multipage extractors on this.
- */
-@KSoupDsl
-abstract class ExtractorBase<V : Any> : Extractor<V>, HttpSupport() {
-
-    internal lateinit var instanceGenerator: () -> V
-
-    internal lateinit var urlGenerator: () -> String
-
-    var url: String
-        get() = urlGenerator()
-        set(value) { this.urlGenerator = { value } }
-
-    protected fun document() = get(url)
-
-    /**
-     * Pass me a generator function for your result type.
-     * I'll make you one of these, so you can stuff it with information from the page.
-     */
-    fun result(generator: () -> V) {
-        this.instanceGenerator = generator
-    }
-
-    /**
-     * Pass me an instance, I'll fill it in from the page.
-     */
-    fun result(instance: V) = result { instance }
-
 }
