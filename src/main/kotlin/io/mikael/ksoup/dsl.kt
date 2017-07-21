@@ -41,7 +41,7 @@ object KSoup {
      * ```
      */
     fun <V : Any> extract(init: SimpleExtractor<V>.() -> Unit): V
-            = simple(init).extract()
+            = SimpleExtractor<V>().apply(init).extract()
 
     /**
      *

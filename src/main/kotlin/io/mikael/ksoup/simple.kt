@@ -15,7 +15,7 @@ data class ExtractionCommand<in V: Any>(val css: String, val extract: (Element, 
 }
 
 @KSoupDsl
-abstract class ExtractorBase<V : Any> : Extractor<V>, HttpSupport() {
+abstract class ExtractorBase<V : Any> : Extractor<V>, WebSupport() {
 
     internal lateinit var instanceGenerator: () -> V
 

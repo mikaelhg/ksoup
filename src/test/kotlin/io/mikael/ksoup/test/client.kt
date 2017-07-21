@@ -1,6 +1,6 @@
 package io.mikael.ksoup.test
 
-import io.mikael.ksoup.BasicHttpClient
+import io.mikael.ksoup.JdkHttpClient
 import io.mikael.ksoup.KSoup
 import org.jsoup.nodes.Element
 import org.junit.Assert
@@ -18,14 +18,14 @@ class ClientTests : WebTest() {
         }
     }
 
-    class BasicSubclass : BasicHttpClient()
+    class JdkSubclass : JdkHttpClient()
 
     @Test
     fun `create a new basic client`() {
         val gh = KSoup.extract<GitHubPage> {
             result { GitHubPage() }
             url = testUrl("/mikaelhg")
-            httpClient = BasicHttpClient()
+            httpClient = JdkHttpClient()
             element(".p-nickname", Element::text, GitHubPage::username)
             text(".p-name", GitHubPage::fullName)
         }
@@ -39,7 +39,7 @@ class ClientTests : WebTest() {
         val gh = KSoup.extract<GitHubPage> {
             result { GitHubPage() }
             url = testUrl("/mikaelhg")
-            httpClient = BasicSubclass()
+            httpClient = JdkSubclass()
             element(".p-nickname", Element::text, GitHubPage::username)
             text(".p-name", GitHubPage::fullName)
         }

@@ -5,13 +5,13 @@ import org.jsoup.nodes.Document
 import java.net.HttpURLConnection
 
 /**
- * This is absolutely going undergo a total change soon.
+ * The essential basis for all extractors which require access to the web.
  */
-open class HttpSupport {
+open class WebSupport {
 
     var headers: MutableMap<String, String> = mutableMapOf()
 
-    var httpClient : HttpClient = BasicHttpClient()
+    var httpClient : HttpClient = JdkHttpClient()
 
     internal var userAgentGenerator: () -> String = { "Mozilla/5.0 Ksoup/1.0" }
 
@@ -37,7 +37,10 @@ interface HttpClient {
     fun get(url: String, headers: Map<String, String>, userAgent: String) : Document
 }
 
-open class BasicHttpClient(
+/**
+ * The most basic, java.net.URL-using HTTP client, with no additional dependencies.
+ */
+open class JdkHttpClient(
         val parser : ResponseToDocumentParser<String, Document> = BasicResponseToDocumentParser()
 ) : HttpClient {
     override fun get(url: String, headers: Map<String, String>, userAgent: String) : Document {
