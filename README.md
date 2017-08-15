@@ -7,6 +7,8 @@ The objective is to improve the long-term maintainability of JSoup content extra
 Current status on 2017-07-21: totally useable for simple extractions, 
 but multi-page extractions and "next page" iteration aren't implemented yet.
 
+Next: error handling, 4xx, 5xx and other responses and exceptions.
+
 ```kotlin
 data class GitHubPage(var username: String = "", var fullName: String = "")
 
@@ -38,6 +40,4 @@ val gh = KSoup.extract<GitHubPage> {
 
     ...
 }
-
-
 ```

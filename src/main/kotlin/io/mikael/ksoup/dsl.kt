@@ -50,11 +50,3 @@ object KSoup {
             = SimpleExtractor<V>().apply(init)
 
 }
-
-/**
- * Don't know yet if we'll be keeping this, or just using the ExtractorBase.
- * Depends on how the more complicated use cases pan out.
- */
-interface Extractor<out V> {
-    fun extract(): V
-}

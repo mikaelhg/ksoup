@@ -8,10 +8,18 @@ import kotlin.reflect.KMutableProperty1
  * A container for each command to extract information from an Element,
  * and stuff it into an object instance field.
  */
-data class ExtractionCommand<in V: Any>(val css: String, val extract: (Element, V) -> Unit) {
+data class ExtractionCommand<in V: Any>(val css: String, val command: (Element, V) -> Unit) {
 
-    fun extract(doc: Document, item: V) = doc.select(css).forEach { element -> extract(element, item) }
+    fun extract(doc: Document, item: V) = doc.select(css).forEach { element -> command(element, item) }
 
+}
+
+/**
+ * Don't know yet if we'll be keeping this, or just using the ExtractorBase.
+ * Depends on how the more complicated use cases pan out.
+ */
+interface Extractor<out V> {
+    fun extract(): V
 }
 
 @KSoupDsl
