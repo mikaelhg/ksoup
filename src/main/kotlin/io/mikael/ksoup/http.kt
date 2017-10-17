@@ -41,11 +41,15 @@ interface HttpClient {
  * The most basic, java.net.URL-using HTTP client, with no additional dependencies.
  */
 open class JdkHttpClient(
-        val parser : ResponseToDocumentParser<String, Document> = BasicResponseToDocumentParser()
+        val parser : ResponseToDocumentParser<String, Document> = StringToDocumentParser(),
+        val connectTimeout: Int = 1000,
+        val readTimeout: Int = 1000
 ) : HttpClient {
     override fun get(url: String, headers: Map<String, String>, userAgent: String) : Document {
         val con = java.net.URL(url).openConnection() as HttpURLConnection
         headers.forEach(con::setRequestProperty)
+        con.connectTimeout = connectTimeout
+        con.readTimeout = readTimeout
         con.requestMethod = "GET"
         con.useCaches = false
         con.doInput = true
@@ -56,10 +60,14 @@ open class JdkHttpClient(
     }
 }
 
+/**
+ * Accept the HttpClient result class as input, produce a parsed document,
+ * such as the JSoup Document.
+ */
 interface ResponseToDocumentParser<in S, out D> {
     fun parse(data: S) : D
 }
 
-open class BasicResponseToDocumentParser : ResponseToDocumentParser<String, Document> {
+open class StringToDocumentParser : ResponseToDocumentParser<String, Document> {
     override fun parse(data: String) = Jsoup.parse(data)!!
 }

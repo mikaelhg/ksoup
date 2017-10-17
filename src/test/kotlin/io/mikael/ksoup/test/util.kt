@@ -55,7 +55,7 @@ open class WebTest {
     }
 
     @After
-    fun after(): Unit = server.close()
+    fun after() = server.close()
 
     protected fun testUrl(path: String) = server.url(path)!!.toString()
 
