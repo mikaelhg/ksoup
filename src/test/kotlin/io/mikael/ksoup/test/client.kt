@@ -3,8 +3,8 @@ package io.mikael.ksoup.test
 import io.mikael.ksoup.JdkHttpClient
 import io.mikael.ksoup.KSoup
 import org.jsoup.nodes.Element
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class ClientTests : WebTest() {
 
@@ -29,8 +29,8 @@ class ClientTests : WebTest() {
             element(".p-nickname", Element::text, GitHubPage::username)
             text(".p-name", GitHubPage::fullName)
         }
-        Assert.assertEquals("mikaelhg", gh.username)
-        Assert.assertEquals("Mikael Gueck", gh.fullName)
+        assertEquals("mikaelhg", gh.username)
+        assertEquals("Mikael Gueck", gh.fullName)
         assertRequestPath("/mikaelhg")
     }
 
@@ -43,8 +43,8 @@ class ClientTests : WebTest() {
             element(".p-nickname", Element::text, GitHubPage::username)
             text(".p-name", GitHubPage::fullName)
         }
-        Assert.assertEquals("mikaelhg", gh.username)
-        Assert.assertEquals("Mikael Gueck", gh.fullName)
+        assertEquals("mikaelhg", gh.username)
+        assertEquals("Mikael Gueck", gh.fullName)
         assertRequestPath("/mikaelhg")
     }
 

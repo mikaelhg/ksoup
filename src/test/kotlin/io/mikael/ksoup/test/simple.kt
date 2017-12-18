@@ -2,8 +2,8 @@ package io.mikael.ksoup.test
 
 import io.mikael.ksoup.KSoup
 import org.jsoup.nodes.Element
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class SimpleTests : WebTest() {
 

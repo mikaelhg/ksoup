@@ -5,9 +5,9 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Before
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import java.util.logging.LogManager
 
 internal val resource = object {}::class.java.classLoader::getResource
@@ -46,7 +46,7 @@ open class WebTest {
         }
     }
 
-    @Before
+    @BeforeEach
     fun before() {
         server = MockWebServer().apply {
             this.setDispatcher(StaticDispatcher(staticContentResolver))
@@ -54,7 +54,7 @@ open class WebTest {
         }
     }
 
-    @After
+    @AfterEach
     fun after() = server.close()
 
     protected fun testUrl(path: String) = server.url(path)!!.toString()
