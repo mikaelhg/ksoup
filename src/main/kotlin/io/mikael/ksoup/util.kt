@@ -1,5 +1,4 @@
 package io.mikael.ksoup
 
-import java.util.logging.Logger
-
-internal fun getLogger(klass: Class<*>) = Logger.getLogger(klass.name)
+internal inline fun <reified T : Any> T.getClassLogger() : java.util.logging.Logger
+        = java.util.logging.Logger.getLogger(T::class.java.name)

@@ -10,6 +10,8 @@ but multi-page extractions and "next page" iteration aren't implemented yet.
 Next: error handling, 4xx, 5xx and other responses and exceptions.
 
 ```kotlin
+import io.mikael.ksoup.KSoup
+
 data class GitHubPage(var username: String = "", var fullName: String = "")
 
 val gh : GitHubPage = KSoup.extract<GitHubPage> {
@@ -38,6 +40,6 @@ val gh = KSoup.extract<GitHubPage> {
 
     httpClient = ApacheHttpClient()
 
-    ...
+    /* ... */
 }
 ```
