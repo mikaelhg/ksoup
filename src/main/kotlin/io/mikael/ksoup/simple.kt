@@ -8,7 +8,7 @@ import kotlin.reflect.KMutableProperty1
  * A container for each command to extract information from an Element,
  * and stuff it into an object instance field.
  */
-data class ExtractionCommand<in V: Any>(val css: String, val command: (Element, V) -> Unit) {
+data class ExtractionCommand<in V : Any>(private val css: String, private val command: (Element, V) -> Unit) {
 
     fun extract(doc: Document, item: V) = doc.select(css).forEach { element -> command(element, item) }
 
@@ -44,7 +44,7 @@ abstract class ExtractorBase<V : Any> : Extractor<V>, WebSupport() {
     }
 
     /**
-     * Pass me an instance, and I'll fill it in from the page.
+     * Pass me an instance, and I'll fill it in with data from the page.
      */
     fun result(instance: V) = result { instance }
 
@@ -126,12 +126,15 @@ open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
     fun copy(urlGenerator: () -> String = this.urlGenerator,
              instanceGenerator: () -> V = this.instanceGenerator,
              extractionCommands: MutableList<ExtractionCommand<V>> = this.extractionCommands,
+             userAgent: String? = null,
+             userAgentGenerator: () -> String = this.userAgentGenerator,
              url: String? = null,
              instance: V? = null) =
             SimpleExtractor<V>().apply {
-                this.urlGenerator = if (url == null) urlGenerator else ({ url })
-                this.instanceGenerator = if (instance == null) instanceGenerator else ({ instance })
-                this.extractionCommands = extractionCommands
+                this@apply.urlGenerator = if (url == null) urlGenerator else ({ url })
+                this@apply.instanceGenerator = if (instance == null) instanceGenerator else ({ instance })
+                this@apply.userAgentGenerator = if (userAgent == null) userAgentGenerator else ({ userAgent })
+                this@apply.extractionCommands = extractionCommands
             }
 
 }
