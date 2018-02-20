@@ -19,7 +19,6 @@ open class WebSupport {
         get() = userAgentGenerator()
         set(value) { userAgentGenerator = { value } }
 
-
     fun userAgent(userAgentGenerator: () -> String) {
         this.userAgentGenerator = userAgentGenerator
     }
@@ -41,13 +40,14 @@ interface HttpClient {
  * The most basic, java.net.URL-using HTTP client, with no additional dependencies.
  */
 open class JdkHttpClient(
-        val parser : ResponseToDocumentParser<String, Document> = StringToDocumentParser(),
-        val connectTimeout: Int = 1000,
-        val readTimeout: Int = 1000
+        private val parser: ResponseToDocumentParser<String, Document> = StringToDocumentParser(),
+        private val connectTimeout: Int = 1000,
+        private val readTimeout: Int = 1000
 ) : HttpClient {
     override fun get(url: String, headers: Map<String, String>, userAgent: String) : Document {
         val con = java.net.URL(url).openConnection() as HttpURLConnection
         headers.forEach(con::setRequestProperty)
+        con.setRequestProperty("User-Agent", userAgent)
         con.connectTimeout = connectTimeout
         con.readTimeout = readTimeout
         con.requestMethod = "GET"
