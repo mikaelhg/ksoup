@@ -5,7 +5,7 @@ import org.jsoup.nodes.Element
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class SimpleTests : WebTest() {
+class SimpleTests : StaticWebTest() {
 
     init {
         staticContentResolver = {
@@ -53,7 +53,7 @@ class SimpleTests : WebTest() {
     fun `copy extractors`() {
         val ex1 = KSoup.simple<GitHubPage> {
             result { GitHubPage() }
-            url = "https://github.com/mikaelhg"
+            url = testUrl("/mikaelhg")
             element(".p-nickname") { element, page ->
                 page.username = element.text()
             }
@@ -66,6 +66,22 @@ class SimpleTests : WebTest() {
         assertEquals("huima", gh.username)
         assertEquals("Heimo Laukkanen", gh.fullName)
         assertRequestPath("/huima")
+        assertNotEquals(ex1.url, ex2.url)
+    }
+
+    @Test
+    fun `properties change in copy`() {
+        val ex1 = KSoup.simple<GitHubPage> {
+            result { GitHubPage() }
+            url = testUrl("/mikaelhg")
+            element(".p-nickname") { element, page ->
+                page.username = element.text()
+            }
+            text(".p-name") { text, page ->
+                page.fullName = text
+            }
+        }
+        val ex2 = ex1.copy(url = testUrl("/huima"))
     }
 
 }

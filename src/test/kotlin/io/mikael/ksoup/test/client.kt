@@ -6,7 +6,7 @@ import org.jsoup.nodes.Element
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class ClientTests : WebTest() {
+class ClientTests : StaticWebTest() {
 
     init {
         staticContentResolver = {

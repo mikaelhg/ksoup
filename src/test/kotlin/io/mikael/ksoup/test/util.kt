@@ -1,6 +1,6 @@
 package io.mikael.ksoup.test
 
-import io.mikael.ksoup.getLogger
+import io.mikael.ksoup.getClassLogger
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -21,8 +21,8 @@ internal class StaticDispatcher(private val resolver: (String) -> String?): Disp
 
     private fun r(n: Int): MockResponse = MockResponse().setResponseCode(n)
 
-    override fun dispatch(request: RecordedRequest?) =
-            resolver(request!!.path)
+    override fun dispatch(request: RecordedRequest) =
+            resolver(request.path)
                     ?.let { resource(it) }
                     ?.let { r(200).setBody(it.readText()) }
                     ?: r(404)
@@ -32,13 +32,13 @@ internal class StaticDispatcher(private val resolver: (String) -> String?): Disp
 /**
  * A base for all integration tests which need to connect to a mock HTTP server.
  */
-open class WebTest {
+open class StaticWebTest {
 
     protected lateinit var server: MockWebServer
 
     protected lateinit var staticContentResolver: (String) -> String?
 
-    protected val log = getLogger(this.javaClass)
+    protected val log = getClassLogger()
 
     init {
         resourceAsStream("logging.properties").use {
