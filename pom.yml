@@ -8,11 +8,11 @@ packaging: jar
 
 parent: {groupId: org.sonatype.oss, artifactId: oss-parent, version: 9}
 
-properties: {java.version: '9', kotlin.version: '1.2.21', jsoup.version: '1.11.2'}
+properties: {java.version: '11', kotlin.version: '1.3.20', jsoup.version: '1.11.3'}
 
 dependencies:
 - {groupId: org.jsoup, artifactId: jsoup, version: "${jsoup.version}"}
-- {groupId: org.jetbrains.kotlin, artifactId: kotlin-stdlib-jre8, version: "${kotlin.version}"}
+- {groupId: org.jetbrains.kotlin, artifactId: kotlin-stdlib-jdk8, version: "${kotlin.version}"}
 - {scope: test, groupId: org.junit.jupiter, artifactId: junit-jupiter-engine, version: 5.0.2}
 - {scope: test, groupId: com.squareup.okhttp3, artifactId: mockwebserver, version: 3.9.1,
     exclusions: [{groupId: org.bouncycastle, artifactId: '*'}]}
