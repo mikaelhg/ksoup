@@ -1,6 +1,6 @@
 package io.mikael.ksoup.test
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MultiTests {
 
