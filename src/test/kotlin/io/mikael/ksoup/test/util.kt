@@ -22,7 +22,7 @@ internal class StaticDispatcher(private val resolver: (String) -> String?): Disp
     private fun r(n: Int): MockResponse = MockResponse().setResponseCode(n)
 
     override fun dispatch(request: RecordedRequest) =
-            resolver(request.path)
+            resolver(request.path!!)
                     ?.let { resource(it) }
                     ?.let { r(200).setBody(it.readText()) }
                     ?: r(404)
@@ -49,7 +49,7 @@ open class StaticWebTest {
     @BeforeEach
     fun before() {
         server = MockWebServer().apply {
-            this.setDispatcher(StaticDispatcher(staticContentResolver))
+            this.dispatcher = StaticDispatcher(staticContentResolver)
             this.start()
         }
     }
@@ -57,7 +57,7 @@ open class StaticWebTest {
     @AfterEach
     fun after() = server.close()
 
-    protected fun testUrl(path: String) = server.url(path)!!.toString()
+    protected fun testUrl(path: String) = server.url(path).toString()
 
     protected fun assertRequestPath(path: String) = assertEquals(path, server.takeRequest().path)
 
