@@ -9,6 +9,8 @@ but multi-page extractions and "next page" iteration aren't implemented yet.
 
 Next: error handling, 4xx, 5xx and other responses and exceptions.
 
+Available from JitPack.
+
 ```kotlin
 import io.mikael.ksoup.KSoup
 

@@ -91,7 +91,7 @@ open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
      * ```
      */
     fun <P> element(css: String, from: Element.() -> P, toProperty: KMutableProperty1<in V, P>) {
-        extractionCommands.add(ExtractionCommand(css, { e, v -> toProperty.set(v, e.from()) }))
+        extractionCommands.add(ExtractionCommand(css) { e, v -> toProperty.set(v, e.from()) })
     }
 
     /**
@@ -105,7 +105,7 @@ open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
      * ```
      */
     fun text(css: String, extract: (String, V) -> Unit) {
-        extractionCommands.add(ExtractionCommand(css, { e, v -> extract(e.text(), v) }))
+        extractionCommands.add(ExtractionCommand(css) { e, v -> extract(e.text(), v) })
     }
 
     /**
@@ -117,7 +117,7 @@ open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
      * ```
      */
     fun text(css: String, property: KMutableProperty1<V, String>) {
-        extractionCommands.add(ExtractionCommand(css, { e, v -> property.set(v, e.text()) }))
+        extractionCommands.add(ExtractionCommand(css) { e, v -> property.set(v, e.text()) })
     }
 
     /**
