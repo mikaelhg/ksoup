@@ -40,7 +40,7 @@ open class WebSupport {
  * HTTP client implementation, implement a HttpClient and a ResponseToDocumentParser.
  */
 interface SoupClient {
-    fun get(url: String, headers: Map<String, String>, userAgent: String) : Document
+    fun get(url: String, headers: Map<String, String>, userAgent: String): Document
 }
 
 /**
@@ -50,8 +50,8 @@ open class UrlConnectionSoupClient(
         private val parser: ResponseToDocumentParser<String, Document> = StringToDocumentParser(),
         private val connectTimeout: Int = 1000,
         private val readTimeout: Int = 1000
-) : SoupClient {
-    override fun get(url: String, headers: Map<String, String>, userAgent: String) : Document {
+): SoupClient {
+    override fun get(url: String, headers: Map<String, String>, userAgent: String): Document {
         val con = java.net.URL(url).openConnection() as HttpURLConnection
         headers.forEach(con::setRequestProperty)
         con.setRequestProperty("User-Agent", userAgent)
@@ -78,7 +78,7 @@ open class JavaNetSoupClient(
     private val authenticator: Authenticator? = Authenticator.getDefault(),
     private val redirects: HttpClient.Redirect = HttpClient.Redirect.NORMAL,
     private val httpVersion: HttpClient.Version = HttpClient.Version.HTTP_1_1
-) : SoupClient {
+): SoupClient {
     override fun get(url: String, headers: Map<String, String>, userAgent: String): Document {
         val client = HttpClient.newBuilder()
             .apply {
@@ -105,7 +105,7 @@ open class JavaNetSoupClient(
  * such as the JSoup Document.
  */
 interface ResponseToDocumentParser<in S, out D> {
-    fun parse(data: S) : D
+    fun parse(data: S): D
 }
 
 open class StringToDocumentParser : ResponseToDocumentParser<String, Document> {
