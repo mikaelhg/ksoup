@@ -1,5 +1,6 @@
 package io.mikael.ksoup.test
 
+import io.mikael.ksoup.JavaNetSoupClient
 import io.mikael.ksoup.UrlConnectionSoupClient
 import io.mikael.ksoup.KSoup
 import org.jsoup.nodes.Element
@@ -40,6 +41,20 @@ class ClientTests : StaticWebTest() {
             result { GitHubPage() }
             url = testUrl("/mikaelhg")
             soupClient = UrlConnectionSubclass()
+            element(".p-nickname", Element::text, GitHubPage::username)
+            text(".p-name", GitHubPage::fullName)
+        }
+        assertEquals("mikaelhg", gh.username)
+        assertEquals("Mikael Gueck", gh.fullName)
+        assertRequestPath("/mikaelhg")
+    }
+
+    @Test
+    fun javaNetClientTest() {
+        val gh = KSoup.extract<GitHubPage> {
+            result { GitHubPage() }
+            url = testUrl("/mikaelhg")
+            soupClient = JavaNetSoupClient()
             element(".p-nickname", Element::text, GitHubPage::username)
             text(".p-name", GitHubPage::fullName)
         }
