@@ -24,9 +24,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jsoup:jsoup:1.16.1")
     testImplementation(enforcedPlatform("org.junit:junit-bom:5.9.3"))
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0") {
-        exclude(group = "junit", module = "junit")
-    }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

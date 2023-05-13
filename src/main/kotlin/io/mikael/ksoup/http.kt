@@ -109,5 +109,5 @@ interface ResponseToDocumentParser<in S, out D> {
 }
 
 open class StringToDocumentParser : ResponseToDocumentParser<String, Document> {
-    override fun parse(data: String) = Jsoup.parse(data)!!
+    override fun parse(data: String) = Jsoup.parse(data)
 }

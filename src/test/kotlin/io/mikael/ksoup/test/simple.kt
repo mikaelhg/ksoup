@@ -22,6 +22,7 @@ class SimpleTests : StaticWebTest() {
         val gh = KSoup.extract<GitHubPage> {
             result { GitHubPage() }
             url = testUrl("/mikaelhg")
+            println(url)
             element(".p-nickname", Element::text, GitHubPage::username)
             text(".p-name", GitHubPage::fullName)
         }
@@ -82,6 +83,7 @@ class SimpleTests : StaticWebTest() {
             }
         }
         val ex2 = ex1.copy(url = testUrl("/huima"))
+        assertNotEquals(ex1.url, ex2.url)
     }
 
 }
