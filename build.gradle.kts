@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    `java`
+    java
     `maven-publish`
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.8.21"
 }
 
 group = "io.mikael.ksoup"
@@ -22,9 +22,11 @@ repositories {
 dependencies {
     implementation(enforcedPlatform(kotlin("bom")))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jsoup:jsoup:1.13.1")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.1")
-    testImplementation(enforcedPlatform("org.junit:junit-bom:5.7.2"))
+    implementation("org.jsoup:jsoup:1.16.1")
+    testImplementation(enforcedPlatform("org.junit:junit-bom:5.9.3"))
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0") {
+        exclude(group = "junit", module = "junit")
+    }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
