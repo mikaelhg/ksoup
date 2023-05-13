@@ -38,16 +38,17 @@ open class StaticWebTest {
         server = HttpServer.create(InetSocketAddress(PORT), 1).apply {
             createContext("/").handler = HttpHandler { exchange ->
                 lastRequest = exchange.requestURI.path
-                when (val s = staticContentResolver(exchange.requestURI.path)) {
+                when (val filePath = staticContentResolver(exchange.requestURI.path)) {
                     null -> {
                         exchange.sendResponseHeaders(404, 0)
                     }
                     else -> {
-                        val bytes = resource(s)!!.readBytes()
+                        val bytes = resource(filePath)!!.readBytes()
                         exchange.sendResponseHeaders(200, bytes.size.toLong())
                         exchange.responseBody.write(bytes)
                     }
                 }
+                exchange.close()
             }
             this.start()
         }
