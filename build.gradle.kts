@@ -20,10 +20,10 @@ repositories {
 }
 
 dependencies {
-    implementation(enforcedPlatform(kotlin("bom")))
+    implementation(platform(kotlin("bom")))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jsoup:jsoup:1.16.1")
-    testImplementation(enforcedPlatform("org.junit:junit-bom:5.9.3"))
+    testImplementation(platform("org.junit:junit-bom:5.9.3"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
@@ -39,5 +39,11 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "11"
+    }
+}
+
+publishing {
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
     }
 }
