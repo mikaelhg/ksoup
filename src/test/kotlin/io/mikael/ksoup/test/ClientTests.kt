@@ -1,7 +1,7 @@
 package io.mikael.ksoup.test
 
-import io.mikael.ksoup.JavaNetSoupClient
-import io.mikael.ksoup.UrlConnectionSoupClient
+import io.mikael.ksoup.net.JavaNetSoupClient
+import io.mikael.ksoup.net.UrlConnectionSoupClient
 import io.mikael.ksoup.KSoup
 import org.jsoup.nodes.Element
 import org.junit.jupiter.api.Assertions.*

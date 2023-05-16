@@ -1,8 +1,5 @@
 package io.mikael.ksoup
 
-@DslMarker
-annotation class KSoupDsl
-
 /**
  * Invoke the methods on this main DSL class to fetch data using JSoup.
  */

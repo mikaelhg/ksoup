@@ -33,7 +33,7 @@ class SimpleTests : StaticWebTest() {
     @Test
     fun `simple one page extraction`() {
         val gh = KSoup.extract<GitHubPage> {
-            result { GitHubPage() }
+            result(GitHubPage())
             url = testUrl("/mikaelhg")
             userAgent = "Mozilla/5.0 UnitTesting/1.0"
             headers["Accept-Encoding"] = "gzip"

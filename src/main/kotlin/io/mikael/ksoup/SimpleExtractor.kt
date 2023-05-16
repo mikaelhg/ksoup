@@ -1,65 +1,18 @@
 package io.mikael.ksoup
 
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import kotlin.reflect.KMutableProperty1
 
 /**
- * A container for each command to extract information from an Element,
- * and stuff it into an object instance field.
- */
-data class ExtractionCommand<in V : Any>(private val css: String, private val command: (Element, V) -> Unit) {
-
-    fun extract(doc: Document, item: V) = doc.select(css).forEach { element -> command(element, item) }
-
-}
-
-/**
- * Don't know yet if we'll be keeping this, or just using the ExtractorBase.
- * Depends on how the more complicated use cases pan out.
- */
-interface Extractor<out V> {
-    fun extract(): V
-}
-
-@KSoupDsl
-abstract class ExtractorBase<V : Any> : Extractor<V>, WebSupport() {
-
-    internal lateinit var instanceGenerator: () -> V
-
-    internal lateinit var urlGenerator: () -> String
-
-    var url: String
-        get() = urlGenerator()
-        set(value) { this.urlGenerator = { value } }
-
-    protected fun document() = get(url)
-
-    /**
-     * Pass me a generator function for your result type.
-     * I'll make you one of these, so you can stuff it with information from the page.
-     */
-    fun result(generator: () -> V) {
-        this.instanceGenerator = generator
-    }
-
-    /**
-     * Pass me an instance, and I'll fill it in with data from the page.
-     */
-    fun result(instance: V) = result { instance }
-
-}
-
-/**
  * Hit one page, get some data.
  */
-open class SimpleExtractor<V: Any>(url: String = "") : ExtractorBase<V>() {
+class SimpleExtractor<V: Any>(url: String = "") : Extractor<V>() {
 
     init {
         this.urlGenerator = { url }
     }
 
-    protected var extractionCommands: MutableList<ExtractionCommand<V>> = mutableListOf()
+    private var extractionCommands: MutableList<ExtractionCommand<V>> = mutableListOf()
 
     override fun extract(): V {
         val instance = instanceGenerator()
