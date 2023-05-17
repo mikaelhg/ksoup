@@ -1,4 +1,4 @@
-package io.mikael.ksoup
+package io.mikael.ksoup.extractor
 
 import io.mikael.ksoup.net.WebSupport
 

@@ -1,4 +1,4 @@
-package io.mikael.ksoup
+package io.mikael.ksoup.extractor
 
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element

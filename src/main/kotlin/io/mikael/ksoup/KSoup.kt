@@ -1,5 +1,7 @@
 package io.mikael.ksoup
 
+import io.mikael.ksoup.extractor.SimpleExtractor
+
 /**
  * Invoke the methods on this main DSL class to fetch data using JSoup.
  */
