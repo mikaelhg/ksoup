@@ -2,7 +2,6 @@ package io.mikael.ksoup.extractor
 
 import io.mikael.ksoup.net.WebSupport
 
-@KSoupDsl
 abstract class Extractor<V : Any> : WebSupport() {
 
     internal lateinit var instanceGenerator: () -> V

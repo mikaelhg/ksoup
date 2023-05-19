@@ -1,7 +1,6 @@
 package io.mikael.ksoup.net
 
-import io.mikael.ksoup.parser.ResponseToDocumentParser
-import io.mikael.ksoup.parser.StringToDocumentParser
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.net.Authenticator
 import java.net.ProxySelector
@@ -15,7 +14,7 @@ import java.time.Duration
  * Java 11 introduced a much better stock HTTP client.
  */
 open class JavaNetSoupClient(
-    private val parser: ResponseToDocumentParser<String, Document> = StringToDocumentParser(),
+    private val parser: (String) -> Document = { Jsoup.parse(it) },
     private val connectTimeout: Duration = Duration.ofSeconds(1),
     private val readTimeout: Duration = Duration.ofSeconds(1),
     private val proxySelector: ProxySelector = HttpClient.Builder.NO_PROXY,
@@ -40,6 +39,6 @@ open class JavaNetSoupClient(
             }
             .build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        return parser.parse(response.body())
+        return parser(response.body())
     }
 }
