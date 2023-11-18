@@ -1,0 +1,14 @@
+product:
+  type: lib
+  platforms: [jvm]
+
+dependencies:
+  - org.jsoup:jsoup:1.16.2
+
+settings:
+  kotlin: {languageVersion: 1.9}
+  jvm: {target: 17}
+  junit: junit-5
+
+module:
+  layout: gradle-jvm
