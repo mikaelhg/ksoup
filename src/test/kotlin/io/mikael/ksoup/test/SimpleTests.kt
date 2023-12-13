@@ -1,6 +1,7 @@
 package io.mikael.ksoup.test
 
 import io.mikael.ksoup.KSoup
+import io.mikael.ksoup.extractor.SimpleExtractor
 import org.jsoup.nodes.Element
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -83,6 +84,24 @@ class SimpleTests : StaticWebTest() {
         }
         val ex2 = ex1.copy(url = testUrl("/huima"))
         assertNotEquals(ex1.url, ex2.url)
+        val ex3 = ex1.copy(urlGenerator = { testUrl("/huima") })
+        assertNotEquals(ex1.url, ex3.url)
+    }
+
+    @Test
+    fun `direct constructor call for SimpleExtractor`() {
+        val ex1 = SimpleExtractor<GitHubPage>(testUrl("/huima")).apply {
+            result { GitHubPage() }
+            url = testUrl("/mikaelhg")
+            element(".p-nickname") { element, page ->
+                page.username = element.text()
+            }
+            text(".p-name") { text, page ->
+                page.fullName = text
+            }
+        }
+        val gh = ex1.extract()
+        assertEquals("mikaelhg", gh.username)
     }
 
 }
