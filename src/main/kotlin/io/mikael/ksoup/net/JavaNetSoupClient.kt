@@ -20,7 +20,7 @@ open class JavaNetSoupClient(
     private val proxySelector: ProxySelector = HttpClient.Builder.NO_PROXY,
     private val authenticator: Authenticator? = Authenticator.getDefault(),
     private val redirects: HttpClient.Redirect = HttpClient.Redirect.NORMAL,
-    private val httpVersion: HttpClient.Version = HttpClient.Version.HTTP_1_1
+    private val httpVersion: HttpClient.Version = HttpClient.Version.HTTP_2
 ): SoupClient {
     override fun get(url: String, headers: Map<String, String>, userAgent: String): Document {
         val client = HttpClient.newBuilder()
