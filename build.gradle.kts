@@ -1,7 +1,8 @@
 plugins {
     java
     `maven-publish`
-    kotlin("jvm") version "1.9.20"
+    kotlin("jvm") version "1.9.21"
+    id("org.jetbrains.kotlinx.kover") version "0.7.5"
 }
 
 group = "io.mikael.ksoup"
@@ -9,7 +10,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
-		languageVersion.set(JavaLanguageVersion.of(17))
+		languageVersion = JavaLanguageVersion.of(17)
     }
     withJavadocJar()
     withSourcesJar()
@@ -23,7 +24,7 @@ dependencies {
     implementation(platform(kotlin("bom")))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jsoup:jsoup:1.16.2")
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
