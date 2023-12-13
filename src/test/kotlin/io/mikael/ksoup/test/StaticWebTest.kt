@@ -1,11 +1,9 @@
 package io.mikael.ksoup.test
 
-import com.sun.net.httpserver.HttpHandler
-import com.sun.net.httpserver.HttpServer
+import io.undertow.Undertow
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import java.net.InetSocketAddress
 import java.util.logging.LogManager
 
 internal val resource = object {}::class.java.classLoader::getResource
@@ -21,7 +19,7 @@ open class StaticWebTest {
         private const val PORT = 45762
     }
 
-    protected lateinit var server: HttpServer
+    private lateinit var server: Undertow
 
     protected lateinit var staticContentResolver: (String) -> String?
 
@@ -35,27 +33,27 @@ open class StaticWebTest {
 
     @BeforeEach
     fun before() {
-        server = HttpServer.create(InetSocketAddress(PORT), 1).apply {
-            createContext("/").handler = HttpHandler { exchange ->
-                lastRequest = exchange.requestURI.path
-                when (val filePath = staticContentResolver(exchange.requestURI.path)) {
+        server = Undertow.builder()
+            .addHttpListener(PORT, "127.0.0.1")
+            .setHandler { exchange ->
+                lastRequest = exchange.requestURI
+                when (val filePath = staticContentResolver(exchange.requestURI)) {
                     null -> {
-                        exchange.sendResponseHeaders(404, 0)
+                        exchange.setStatusCode(404)
                     }
+
                     else -> {
-                        val bytes = resource(filePath)!!.readBytes()
-                        exchange.sendResponseHeaders(200, bytes.size.toLong())
-                        exchange.responseBody.write(bytes)
+                        exchange.setStatusCode(200)
+                        exchange.responseSender.send(resource(filePath)!!.readText())
                     }
                 }
-                exchange.close()
             }
-            this.start()
-        }
+            .build()
+        server.start()
     }
 
     @AfterEach
-    fun after() = server.stop(0)
+    fun after() = server.stop()
 
     protected fun testUrl(path: String) = "http://127.0.0.1:${PORT}${path}"
 
