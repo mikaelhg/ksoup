@@ -79,15 +79,15 @@ class SimpleExtractor<V: Any>(url: String = "") : Extractor<V>() {
     fun copy(urlGenerator: () -> String = this.urlGenerator,
              instanceGenerator: () -> V = this.instanceGenerator,
              extractionCommands: MutableList<ExtractionCommand<V>> = this.extractionCommands,
-             userAgent: String? = null,
              userAgentGenerator: () -> String = this.userAgentGenerator,
+             userAgent: String? = null,
              url: String? = null,
              instance: V? = null) =
             SimpleExtractor<V>().apply {
                 this@apply.urlGenerator = if (url == null) urlGenerator else ({ url })
                 this@apply.instanceGenerator = if (instance == null) instanceGenerator else ({ instance })
                 this@apply.userAgentGenerator = if (userAgent == null) userAgentGenerator else ({ userAgent })
-                this@apply.extractionCommands = extractionCommands
+                this@apply.extractionCommands = extractionCommands.toMutableList()
             }
 
 }
