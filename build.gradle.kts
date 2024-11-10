@@ -25,7 +25,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jsoup:jsoup:1.16.2")
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
-    testImplementation("io.undertow:undertow-core:2.3.10.Final")
+    testImplementation("io.undertow:undertow-core:2.3.17.Final")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
