@@ -13,7 +13,7 @@ internal val resourceAsStream = object {}::class.java.classLoader::getResourceAs
 /**
  * A base for all integration tests which need to connect to a mock HTTP server.
  */
-open class StaticWebTest {
+abstract class StaticWebTest {
 
     companion object {
         private const val PORT = 45762

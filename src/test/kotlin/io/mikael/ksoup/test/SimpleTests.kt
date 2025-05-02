@@ -3,7 +3,8 @@ package io.mikael.ksoup.test
 import io.mikael.ksoup.KSoup
 import io.mikael.ksoup.extractor.SimpleExtractor
 import org.jsoup.nodes.Element
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 
 class SimpleTests : StaticWebTest() {
