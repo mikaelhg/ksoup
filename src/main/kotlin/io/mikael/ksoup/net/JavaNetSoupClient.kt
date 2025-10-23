@@ -14,7 +14,7 @@ import java.time.Duration
  * Java 11 introduced a much better stock HTTP client.
  */
 open class JavaNetSoupClient(
-    private val parser: (String) -> Document = { Jsoup.parse(it) },
+    private val parser: (String) -> Document = Jsoup::parse,
     private val connectTimeout: Duration = Duration.ofSeconds(1),
     private val readTimeout: Duration = Duration.ofSeconds(1),
     private val proxySelector: ProxySelector = HttpClient.Builder.NO_PROXY,
