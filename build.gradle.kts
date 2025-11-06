@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.mikael"
-version = "0.0.1-SNAPSHOT"
+description = "ksoup"
 
 java {
     toolchain {
