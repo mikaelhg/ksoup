@@ -1,7 +1,7 @@
 plugins {
     java
     `maven-publish`
-    kotlin("jvm") version "2.3.21"
+    kotlin("jvm") version "2.4.0"
 }
 
 group = "io.mikael"
@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     implementation("org.jsoup:jsoup:1.22.2")
-    testImplementation("io.undertow:undertow-core:2.4.1.Final")
+    testImplementation("io.undertow:undertow-core:2.4.2.Final")
     testImplementation(kotlin("test"))
 }
 
