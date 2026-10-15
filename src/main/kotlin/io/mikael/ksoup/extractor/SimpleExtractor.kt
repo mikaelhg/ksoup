@@ -1,5 +1,6 @@
 package io.mikael.ksoup.extractor
 
+import io.mikael.ksoup.net.SoupClient
 import org.jsoup.nodes.Element
 import kotlin.reflect.KMutableProperty1
 
@@ -80,6 +81,8 @@ class SimpleExtractor<V: Any>(url: String = "") : Extractor<V>() {
              instanceGenerator: () -> V = this.instanceGenerator,
              extractionCommands: MutableList<ExtractionCommand<V>> = this.extractionCommands,
              userAgentGenerator: () -> String = this.userAgentGenerator,
+             soupClient: SoupClient = this.soupClient,
+             headers: Map<String, String> = this.headers,
              userAgent: String? = null,
              url: String? = null,
              instance: V? = null) =
@@ -87,6 +90,8 @@ class SimpleExtractor<V: Any>(url: String = "") : Extractor<V>() {
                 this@apply.urlGenerator = if (url == null) urlGenerator else ({ url })
                 this@apply.instanceGenerator = if (instance == null) instanceGenerator else ({ instance })
                 this@apply.userAgentGenerator = if (userAgent == null) userAgentGenerator else ({ userAgent })
+                this@apply.soupClient = soupClient
+                this@apply.headers = headers.toMutableMap()
                 this@apply.extractionCommands = extractionCommands.toMutableList()
             }
 
