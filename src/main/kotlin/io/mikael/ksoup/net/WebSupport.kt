@@ -1,10 +1,12 @@
 package io.mikael.ksoup.net
 
+import io.mikael.ksoup.KSoupDsl
 import org.jsoup.nodes.Document
 
 /**
  * The essential basis for all extractors which require access to the web.
  */
+@KSoupDsl
 open class WebSupport {
 
     var headers: MutableMap<String, String> = mutableMapOf()
