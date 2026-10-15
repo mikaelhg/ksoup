@@ -29,8 +29,8 @@ val profile = KSoup.extract<GitHubProfile> {
 
     userAgent = "Mozilla/5.0 Ksoup/1.0"
 
-    headers["Accept-Encoding"] = "gzip"
-    
+    headers["Accept-Language"] = "en"
+
     text(".p-name") { text, page ->
         page.fullName = text
     }
@@ -44,12 +44,16 @@ val profile = KSoup.extract<GitHubProfile> {
 ### Custom HTTP Client
 
 ```kotlin
-class CustomHttpClient : HttpClient { 
-    /* Your implementation here */
+import io.mikael.ksoup.net.SoupClient
+
+// SoupClient is a single-method interface: fetch a URL, return a parsed JSoup Document.
+val customClient = SoupClient { url, headers, userAgent ->
+    /* Fetch with Apache HttpClient, OkHttp, etc. and return Jsoup.parse(body, url) */
 }
 
 val profile = KSoup.extract<GitHubProfile> {
-    httpClient = CustomHttpClient()
+    result { GitHubProfile() }
+    soupClient = customClient
     url = "https://github.com/mikaelhg"
     // Extraction logic...
 }

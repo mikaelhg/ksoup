@@ -23,7 +23,7 @@ object KSoup {
      *
      *     userAgent = "Mozilla/5.0 Ksoup/1.0"
      *
-     *     headers["Accept-Encoding"] = "gzip"
+     *     headers["Accept-Language"] = "en"
      *
      *     text(".p-name") { text, page ->       // find all elements for the selector
      *         page.fullName = text              //     then run this code for each
