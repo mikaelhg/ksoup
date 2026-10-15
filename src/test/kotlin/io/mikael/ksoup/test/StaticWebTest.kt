@@ -25,6 +25,8 @@ abstract class StaticWebTest {
 
     private var lastRequest: String? = null
 
+    protected var lastRequestHeaders: Map<String, String> = emptyMap()
+
     init {
         resourceAsStream("logging.properties").use {
             LogManager.getLogManager().readConfiguration(it)
@@ -37,6 +39,7 @@ abstract class StaticWebTest {
             .addHttpListener(PORT, "127.0.0.1")
             .setHandler { exchange ->
                 lastRequest = exchange.requestURI
+                lastRequestHeaders = exchange.requestHeaders.associate { it.headerName.toString().lowercase() to it.first }
                 when (val filePath = staticContentResolver(exchange.requestURI)) {
                     null -> {
                         exchange.setStatusCode(404)

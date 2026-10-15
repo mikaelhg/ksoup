@@ -52,6 +52,27 @@ class SimpleTests : StaticWebTest() {
     }
 
     @Test
+    fun `user agent is sent`() {
+        KSoup.extract<GitHubPage> {
+            result { GitHubPage() }
+            url = testUrl("/mikaelhg")
+            userAgent = "Mozilla/5.0 UnitTesting/1.0"
+        }
+        assertEquals("Mozilla/5.0 UnitTesting/1.0", lastRequestHeaders["user-agent"])
+    }
+
+    @Test
+    fun `explicit user agent header wins`() {
+        KSoup.extract<GitHubPage> {
+            result { GitHubPage() }
+            url = testUrl("/mikaelhg")
+            userAgent = "Ignored/1.0"
+            headers["User-Agent"] = "Explicit/1.0"
+        }
+        assertEquals("Explicit/1.0", lastRequestHeaders["user-agent"])
+    }
+
+    @Test
     fun `copy extractors`() {
         val ex1 = KSoup.simple<GitHubPage> {
             result { GitHubPage() }

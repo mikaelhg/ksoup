@@ -36,6 +36,9 @@ open class JavaNetSoupClient(
             .apply {
                 readTimeout.let(this::timeout)
                 headers.forEach(this::header)
+                if (headers.keys.none { it.equals("User-Agent", ignoreCase = true) }) {
+                    header("User-Agent", userAgent)
+                }
             }
             .build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
