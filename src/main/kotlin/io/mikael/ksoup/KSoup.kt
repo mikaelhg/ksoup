@@ -43,7 +43,22 @@ object KSoup {
             = SimpleExtractor<V>().apply(init).extract()
 
     /**
+     * Configure an extractor without running it, so you can run it later, or more than once.
      *
+     * ## Usage:
+     *
+     * If you want to build an extractor once, then point copies of it at different pages:
+     *
+     * ```kotlin
+     * val profile = KSoup.simple<GitHubPage> {
+     *     result { GitHubPage() }               // a new result object for each extraction
+     *     url = "https://github.com/mikaelhg"
+     *     text(".p-name", GitHubPage::fullName)
+     * }
+     *
+     * val mikael = profile.extract()
+     * val heimo = profile.copy(url = "https://github.com/huima").extract()
+     * ```
      */
     fun <V : Any> simple(init: SimpleExtractor<V>.() -> Unit): SimpleExtractor<V>
             = SimpleExtractor<V>().apply(init)
