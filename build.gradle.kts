@@ -1,7 +1,7 @@
 plugins {
     java
     `maven-publish`
-    kotlin("jvm") version "2.4.20"
+    kotlin("jvm") version "2.4.21"
 }
 
 group = "io.mikael"
