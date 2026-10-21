@@ -20,7 +20,6 @@ repositories {
 
 dependencies {
     implementation("org.jsoup:jsoup:1.23.2")
-    testImplementation("io.undertow:undertow-core:2.4.3.Final")
     testImplementation(kotlin("test"))
 }
 
