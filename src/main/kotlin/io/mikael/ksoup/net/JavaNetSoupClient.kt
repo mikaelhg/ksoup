@@ -12,12 +12,15 @@ import java.time.Duration
 
 /**
  * Java 11 introduced a much better stock HTTP client.
+ *
+ * [responseTimeout] bounds the wait for the response headers only, not the body transfer.
+ * [proxySelector] defaults to the JVM-wide selector, which honors the system proxy settings.
  */
 open class JavaNetSoupClient(
     private val parser: (String) -> Document = Jsoup::parse,
     private val connectTimeout: Duration = Duration.ofSeconds(1),
-    private val readTimeout: Duration = Duration.ofSeconds(1),
-    private val proxySelector: ProxySelector = HttpClient.Builder.NO_PROXY,
+    private val responseTimeout: Duration = Duration.ofSeconds(10),
+    private val proxySelector: ProxySelector = ProxySelector.getDefault() ?: HttpClient.Builder.NO_PROXY,
     private val authenticator: Authenticator? = Authenticator.getDefault(),
     private val redirects: HttpClient.Redirect = HttpClient.Redirect.NORMAL,
     private val httpVersion: HttpClient.Version = HttpClient.Version.HTTP_2
@@ -34,7 +37,7 @@ open class JavaNetSoupClient(
             .build()
         val request = HttpRequest.newBuilder().GET().uri(URI.create(url))
             .apply {
-                readTimeout.let(this::timeout)
+                responseTimeout.let(this::timeout)
                 headers.forEach(this::header)
                 if (headers.keys.none { it.equals("User-Agent", ignoreCase = true) }) {
                     header("User-Agent", userAgent)
